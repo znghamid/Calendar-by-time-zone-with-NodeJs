@@ -19,6 +19,3 @@ by default API run on port `3000`
 ## Requirements
 - ES6
 - minimum node version: 10
-
-# Special thanks
-Thank you very much for using this open source API
