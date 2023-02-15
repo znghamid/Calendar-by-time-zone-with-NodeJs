@@ -231,7 +231,7 @@ app.use(function (req, res, next) {
 });
 
 // URL's
-app.get('/calendar/:area/:city/:region', (req, res, next) => {
+app.get('/timezone', (req, res, next) => {
 
   const API_KEY = req.header('API_KEY');
 
@@ -254,9 +254,9 @@ app.get('/calendar/:area/:city/:region', (req, res, next) => {
     );
   }
 
-  const Area = req.params.area;
-  const City = req.params.city;
-  const Region = req.params.region;
+  const Area = req.query.area;
+  const City = req.query.city;
+  const Region = req.query.region;
 
   if (all_Zone.includes(`${Area}/${City}/${Region}`)) {
     res.json(
@@ -266,47 +266,7 @@ app.get('/calendar/:area/:city/:region', (req, res, next) => {
         "data": convertTZ(Area, City, Region)
       }
     );
-  }
-
-  else {
-    return res.status(400).json(
-      {
-        'code': '400',
-        'status': 'Bad Request',
-        'data': 'Invalid area or city or region or unable to convert it'
-      }
-    );
-  }
-
-});
-
-app.get('/calendar/:area/:city', (req, res, next) => {
-
-  const API_KEY = req.header('API_KEY');
-
-  if (!API_KEY) {
-    return res.status(403).json(
-      {
-        "code": '403',
-        "status": 'Forbidden',
-        "data": 'API Key is not found'
-      }
-    );
-  }
-  if (API_KEY !== process.env.API_KEY) {
-    return res.status(403).json(
-      {
-        "code": '403',
-        "status": 'Forbidden',
-        "data":'API Key is invalid'
-      }
-    );
-  }
-
-  const Area = req.params.area;
-  const City = req.params.city;
-
-  if (all_Zone.includes(`${Area}/${City}`)) {
+  } else if (all_Zone.includes(`${Area}/${City}`)){
     res.json(
       {
         "code": '200',
@@ -314,46 +274,7 @@ app.get('/calendar/:area/:city', (req, res, next) => {
         "data": convertTZ(Area, City)
       }
     );
-  }
-
-  else {
-    return res.status(400).json(
-      {
-        'code': '400',
-        'status': 'Bad Request',
-        'data': 'Invalid area or city or unable to convert it'
-      }
-    );
-  }
-
-});
-
-app.get('/calendar/:area', (req, res, next) => {
-
-  const API_KEY = req.header('API_KEY');
-
-  if (!API_KEY) {
-    return res.status(403).json(
-      {
-        "code": '403',
-        "status": 'Forbidden',
-        "data": 'API Key is not found'
-      }
-    );
-  }
-  if (API_KEY !== process.env.API_KEY) {
-    return res.status(403).json(
-      {
-        "code": '403',
-        "status": 'Forbidden',
-        "data":'API Key is invalid'
-      }
-    );
-  }
-
-  const Area = req.params.area;
-
-  if (all_Zone.includes(Area)) {
+  } else if (all_Zone.includes(`${Area}`)){
     res.json(
       {
         "code": '200',
@@ -362,13 +283,12 @@ app.get('/calendar/:area', (req, res, next) => {
       }
     );
   }
-
   else {
     return res.status(400).json(
       {
         'code': '400',
         'status': 'Bad Request',
-        'data': 'Invalid area or unable to convert it'
+        'data': 'Invalid area or city or region or unable to convert it'
       }
     );
   }
